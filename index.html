@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Loading Screen</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #video-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; /* Video füllt ganzen Bildschirm */
+            z-index: 1;
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); /* Dunkler Overlay für Text */
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        h1 { font-size: 4em; margin-bottom: 20px; animation: glow 2s infinite; }
+        .info { font-size: 1.5em; margin: 10px 0; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px; }
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #00ff88; }
+            50% { text-shadow: 0 0 20px #00ff88, 0 0 30px #00ff88; }
+        }
+    </style>
+</head>
+<body>
+    <!-- DEIN VIDEO HIER EINFÜGEN -->
+    <video id="video-bg" autoplay muted loop playsinline>
+        <source src="loading.webm" type="video/webm">
+        <source src="DEIN_VIDEO.mp4" type="video/mp4">
+        <!-- Fallback wenn Video nicht lädt -->
+        <div style="background: #111; color: white; display: flex; align-items: center; justify-content: center; height: 100vh;">
+            Video nicht gefunden
+        </div>
+    </video>
+
+    <div class="overlay">
+        <h1>Server lädt...</h1>
+        <div class="info" id="playerinfo">SteamID: Lade...</div>
+        <div class="info" id="mapinfo">Map: Lade...</div>
+    </div>
+
+    <script>
+        // GMod Parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('playerinfo').textContent = `SteamID: ${urlParams.get('steamid') || 'Unbekannt'}`;
+        document.getElementById('mapinfo').textContent = `Map: ${urlParams.get('mapname') || 'Unbekannt'}`;
+        
+        // Video autoplay fix
+        const video = document.getElementById('video-bg');
+        video.play().catch(e => console.log('Video Autoplay blockiert'));
+    </script>
+</body>
+</html>
